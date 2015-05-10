@@ -276,3 +276,6 @@ function ActionHello(){
     webiopi().callMacro("sayHello", [0]);
 }
 
+function ActionShutter(){
+    webiopi().callMacro("shutterCamera", [0]);
+}

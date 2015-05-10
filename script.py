@@ -7,6 +7,10 @@ import pygame
 import pygame.midi
 from time import sleep
 
+import subprocess
+import picamera
+
+
 # port setting
 PWM1  = 25
 PWM2  = 24
@@ -25,8 +29,8 @@ pygame.midi.init()
 
 # for python3
 #for id in range(pygame.midi.get_count()):
-#	print id
-#	print pygame.midi.get_device_info(id)
+#	print (id)
+#	print (pygame.midi.get_device_info(id))
  
 midiOutput = pygame.midi.Output(port)
 midiOutput.set_instrument(instrument)
@@ -45,8 +49,6 @@ wiringpi.pinMode(CAMERA_SERVO, wiringpi.GPIO.PWM_OUTPUT)
 wiringpi.pwmSetMode(wiringpi.GPIO.PWM_MODE_MS) # 周波数固定
 wiringpi.pwmSetClock(375) # 50 Hz
 wiringpi.pwmWrite(CAMERA_SERVO, getServoDutyForWebIOPi(0.5))
-
-#wiringpi.softPwmCreate(TAIL_SERVO, 0, 200);
 
 
 # デバッグ出力を有効に
@@ -70,6 +72,11 @@ def setup():
     GPIO.pwmWrite(PWM3, 0)
     GPIO.pwmWrite(PWM4, 0)
     GPIO.pwmWrite(TAIL_SERVO, 0)
+
+    # volume setting 7F(Max)
+    midiOutput.write_short(0xB0, 7, 127) 
+
+
 
 # WebIOPiにより繰り返される関数
 def loop():
@@ -99,34 +106,60 @@ def setHwPWM(duty, commandID):
 
 @webiopi.macro
 def sayHello(tmp):
-    # setting lyric by sending SysEx
-    #midiOutput.write_sys_ex(pygame.midi.time(), [0xF0, 0x43, 0X79, 0x09, 0x11, 0x0A, 0x00, 0x09, 0x7B, 0x40, 0x36, 0x77, 0xF7])
-    # for python3
+    # setting lyric by sending SysEx for python3
     midiOutput.write_sys_ex(0, b'\xF0\x43\x79\x09\x11\x0A\x00\x09\x7B\x40\x36\x77\xF7')
 
-    # sing a song
+    # say hello and action
     midiOutput.note_on(79, 80)
-    #wiringpi.softPwmWrite(TAIL_SERVO, 20)
     GPIO.pulseAngle(TAIL_SERVO, 0)
-    #GPIO.pulseRatio(TAIL_SERVO, 0)
-    #GPIO.pwmWrite(TAIL_SERVO, 20)
     sleep(.160)
     midiOutput.note_on(79, 80)
-    #wiringpi.softPwmWrite(TAIL_SERVO, 160)
     GPIO.pulseAngle(TAIL_SERVO, 40)
-    #GPIO.pulseRatio(TAIL_SERVO, 20)
     sleep(.200)
     midiOutput.note_on(79, 80)
     sleep(.180)
     midiOutput.note_on(79, 80)
-    #wiringpi.softPwmWrite(TAIL_SERVO, 60) 
     GPIO.pulseAngle(TAIL_SERVO, -30)
-    #GPIO.pulseRatio(TAIL_SERVO, 50)
     sleep(.170)
     midiOutput.note_on(79, 80)
     sleep(.400)
     GPIO.pulseAngle(TAIL_SERVO, 20)
-    #GPIO.pulseRatio(TAIL_SERVO, 60)
     midiOutput.note_off(79,80)
 
     GPIO.pwmWrite(TAIL_SERVO, 0)
+
+
+
+@webiopi.macro
+def shutterCamera(tmp):
+
+    cmd ="sudo /etc/init.d/stream stop"
+    subprocess.call(cmd, shell=True)
+    # setting lyric by sending SysEx for python3
+    midiOutput.write_sys_ex(0, b'\xF0\x43\x79\x09\x11\x0A\x00\x47\x01\x36\x01\x1c\xF7')
+
+    # say hello and action
+    midiOutput.note_on(79, 80)
+    sleep(.200)
+    midiOutput.note_on(79, 80)
+    sleep(.200)
+    midiOutput.note_on(74, 80)
+    sleep(.180)
+    midiOutput.note_on(74, 80)
+    sleep(.500)
+    midiOutput.note_on(79, 80)
+    sleep(.300)
+    midiOutput.note_off(79,80)
+
+
+    with picamera.PiCamera() as camera:
+        camera.resolution = (1024,768)
+        camera.start_preview()
+        sleep(1.000)
+        camera.capture('/home/pi/photo/capture.jpg')	
+
+    #cmd ="tw 写真撮れたよ〜 --file=/home/pi/photo/capture.jpg --yes"
+    #subprocess.call(cmd, shell=True)
+    cmd ="sudo /etc/init.d/stream start"
+    subprocess.call(cmd, shell=True)
+
