@@ -279,3 +279,7 @@ function ActionHello(){
 function ActionShutter(){
     webiopi().callMacro("shutterCamera", [0]);
 }
+
+function ActionSing(){
+    webiopi().callMacro("singSong", [0]);
+}
