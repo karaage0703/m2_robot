@@ -61,24 +61,6 @@ webiopi.setDebug()
 # GPIOライブラリの取得
 GPIO = webiopi.GPIO
 
-# camera function
-def cameraLoad():
-    global shutter_numb
-    filename = os.path.join(home_dir, 'camera.set')
-    fp = open(filename)
-    tmp_shutter_numb = fp.readlines() 
-    tmp2_shutter_numb = tmp_shutter_numb[0].rstrip()
-    shutter_numb = int(tmp2_shutter_numb)
-    fp.close()
- 
-def cameraSave():
-    filename = os.path.join(home_dir, 'camera.set')
-    fp = open(filename, 'w')
-    fp.write(str(shutter_numb))
-    fp.close()
-
-
-
 # WebIOPiの起動時に呼ばれる関数
 def setup():
     webiopi.debug("Script with macros - Setup")
@@ -97,9 +79,6 @@ def setup():
 
     # volume setting 7F(Max)
     midiOutput.write_short(0xB0, 7, 127) 
-
-    # camera setting
-    cameraLoad()
 
 
 # WebIOPiにより繰り返される関数
@@ -149,9 +128,7 @@ def sayHello(tmp):
     sleep(.400)
     GPIO.pulseAngle(TAIL_SERVO, 20)
     midiOutput.note_off(79,80)
-
     GPIO.pwmWrite(TAIL_SERVO, 0)
-
 
 
 @webiopi.macro
@@ -182,14 +159,7 @@ def shutterCamera(tmp):
 def singSong(tmp):
 
     # setting lyric by sending SysEx
-    #midiOutput.write_sys_ex(0, b'\xF0\x43\x79\x09\x11\x0A\x00\x09\x7B\x40\x36\x77\xF7')
     midiOutput.write_sys_ex(0, b'\xF0\x43\x79\x09\x11\x0A\x00\x00\x70\x43\x64\x64\x43\x25\x4E\x7B\x65\x18\x71\x43\x6E\x04\x04\xF7')
-
-#    midiOutput.write_sys_ex(0, b'\xF0\x43\x10\x4C\x02\x01\x5A\x01\xF7')
-#    midiOutput.write_short(0xB0, 0x5E, 0x7F)
-#    midiOutput.write_sys_ex(0, b'\xF0\x43\x10\x4C\x02\x01\x56\x7F\xF7')
-#    midiOutput.write_sys_ex(0, b'\xF0\x43\x10\x4C\x02\x01\x40\x01\x00\xF7')
-
     midiOutput.write_short(0xB0, 0x5B, 0x6F) # reverb
 
     # sing a song
@@ -197,9 +167,6 @@ def singSong(tmp):
     sleep(.200)
     midiOutput.note_on(71, 80)
     sleep(.200)
-#    midiOutput.write_short(0xB0, 0x63, 0x70)
-#    midiOutput.write_short(0xB0, 0x62, 0x04)
-#    midiOutput.write_short(0xB0, 0x06, 0x01)
     midiOutput.note_on(72, 80)
     sleep(1.00)
     midiOutput.note_off(72, 80)
@@ -235,8 +202,6 @@ def singSong(tmp):
     midiOutput.note_on(72, 80)
     sleep(.400)
     midiOutput.note_off(72,80)
-#    wiringpi.pwmWrite(18, 50) 
-
     midiOutput.write_short(0xB0, 0x5B, 0x10)
 
 
