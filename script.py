@@ -2,6 +2,7 @@
 import webiopi
 import time
 import wiringpi2 as wiringpi
+import os
 
 import pygame
 import pygame.midi
@@ -10,6 +11,9 @@ from time import sleep
 import subprocess
 import picamera
 
+# camera setting
+shutter_numb = 0
+home_dir = '/home/pi/photo'
 
 # port setting
 PWM1  = 25
@@ -57,6 +61,24 @@ webiopi.setDebug()
 # GPIOライブラリの取得
 GPIO = webiopi.GPIO
 
+# camera function
+def cameraLoad():
+    global shutter_numb
+    filename = os.path.join(home_dir, 'camera.set')
+    fp = open(filename)
+    tmp_shutter_numb = fp.readlines() 
+    tmp2_shutter_numb = tmp_shutter_numb[0].rstrip()
+    shutter_numb = int(tmp2_shutter_numb)
+    fp.close()
+ 
+def cameraSave():
+    filename = os.path.join(home_dir, 'camera.set')
+    fp = open(filename, 'w')
+    fp.write(str(shutter_numb))
+    fp.close()
+
+
+
 # WebIOPiの起動時に呼ばれる関数
 def setup():
     webiopi.debug("Script with macros - Setup")
@@ -76,6 +98,8 @@ def setup():
     # volume setting 7F(Max)
     midiOutput.write_short(0xB0, 7, 127) 
 
+    # camera setting
+    cameraLoad()
 
 
 # WebIOPiにより繰り返される関数
@@ -132,9 +156,6 @@ def sayHello(tmp):
 
 @webiopi.macro
 def shutterCamera(tmp):
-
-    cmd ="sudo /etc/init.d/stream stop"
-    subprocess.call(cmd, shell=True)
     # setting lyric by sending SysEx for python3
     midiOutput.write_sys_ex(0, b'\xF0\x43\x79\x09\x11\x0A\x00\x47\x01\x36\x01\x1c\xF7')
 
@@ -151,17 +172,11 @@ def shutterCamera(tmp):
     sleep(.300)
     midiOutput.note_off(79,80)
 
-
-    with picamera.PiCamera() as camera:
-        camera.resolution = (1024,768)
-        camera.start_preview()
-        sleep(1.000)
-        camera.capture('/home/pi/photo/capture.jpg')	
+    cmd ="python3 /usr/share/webiopi/htdocs/m2/shutter.py"
+    subprocess.call(cmd, shell=True)
 
     #cmd ="tw 写真撮れたよ〜 --file=/home/pi/photo/capture.jpg --yes"
     #subprocess.call(cmd, shell=True)
-    cmd ="sudo /etc/init.d/stream start"
-    subprocess.call(cmd, shell=True)
 
 @webiopi.macro
 def singSong(tmp):
