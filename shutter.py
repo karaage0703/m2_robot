@@ -35,7 +35,7 @@ photofile = open(filename, 'wb')
 print(photofile)
 
 with picamera.PiCamera() as camera:
-    camera.resolution = (1024,768)
+    camera.resolution = (2592,1944)
     camera.start_preview()
     sleep(1.000)
     camera.capture(photofile)
