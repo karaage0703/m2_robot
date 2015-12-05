@@ -1,0 +1,13 @@
+[Unit]
+Description=WebIOPI
+After=syslog.target
+
+[Service]
+Type=simple
+WorkingDirectory=/usr/share/webiopi/htdocs
+ExecStart=/usr/bin/webiopi -c /etc/webiopi/config
+TimeoutStopSec=5
+
+[Install]
+WantedBy = multi-user.target
+
