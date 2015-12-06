@@ -1,4 +1,6 @@
-Software for Robot based on Raspberry Pi2 and Raspbian Jessie or Wheezy
+<img src="https://raw.githubusercontent.com/wiki/karaage0703/m2_robot/001.jpg" alt="m2_robot" width="640" height="480">
+
+oftware for Robot based on Raspberry Pi2 and Raspbian Jessie or Wheezy
 
 Setup is below
 
