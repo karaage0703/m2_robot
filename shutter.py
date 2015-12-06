@@ -7,8 +7,10 @@ from time import sleep
 shutter_numb = 0
 home_dir = '/home/pi/photo'
 
-cmd ="sudo /etc/init.d/stream stop"
+#cmd ="sudo /etc/init.d/stream stop"
+cmd ="sudo killall mjpg_streamer"
 subprocess.call(cmd, shell=True)
+
 
 def cameraLoad():
     global shutter_numb
@@ -30,7 +32,7 @@ cameraLoad()
 shutter_numb +=1
 cameraSave()
 
-filename = os.path.join(home_dir, str(shutter_numb) + '.jpg')
+filename = os.path.join(home_dir, str("{0:06d}".format(shutter_numb)) + '.jpg')
 photofile = open(filename, 'wb')
 print(photofile)
 
@@ -44,5 +46,6 @@ photofile.close()
 
 #cmd ="tw 写真撮れたよ〜 --file=capture_2.jpg --yes"
 #subprocess.call(cmd, shell=True)
-cmd ="sudo /etc/init.d/stream start"
+#cmd ="sudo /etc/init.d/stream start"
+cmd ="/usr/local/bin/stream.sh"
 subprocess.call(cmd, shell=True)
