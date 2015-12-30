@@ -2,7 +2,7 @@
 
 Robot software based on Raspberry Pi2 and Raspbian Jessie or Wheezy
 
-Setup is below
+# Robot Setup
 
 1. Install webiopi and WiringPi2-Pytho and mjpegstreamer
 
@@ -37,9 +37,10 @@ Access below address on your browser.
 http://<ipaddress>:8000/m2/
 ~~~~
 
+# Website
 Please check for my website in detail(Japanese only)
 
 http://karaage.hatenadiary.jp/entry/2015/09/02/073000
 
-
+# License
 This software is released under the MIT License, see LICENSE.
