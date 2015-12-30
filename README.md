@@ -40,3 +40,6 @@ http://<ipaddress>:8000/m2/
 Please check for my website in detail(Japanese only)
 
 http://karaage.hatenadiary.jp/entry/2015/09/02/073000
+
+
+This software is released under the MIT License, see LICENSE.
