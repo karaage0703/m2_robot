@@ -4,9 +4,9 @@ Robot software based on Raspberry Pi2 and Raspbian Jessie or Wheezy
 
 # Robot Setup
 
-1. Install webiopi and WiringPi2-Pytho and mjpegstreamer
+Install webiopi and WiringPi2-Pytho and mjpegstreamer
 
-2. Execute below commands
+Execute below commands
 ~~~~
 $ cd /usr/share/webiopi/htdocs
 $ git clone https://github.com/karaage0703/m2_robot.git m2
@@ -14,7 +14,7 @@ $ cd m2
 $ sudo mv webiopi.service /etc/systemd/system/
 ~~~~
 
-3. Edit /etc/webiopi/config
+Edit /etc/webiopi/config
 ~~~~
 $ sudo vi /etc/webiopi/config
 
@@ -25,12 +25,12 @@ To:
 myscript = /usr/share/webiopi/htdocs/m2/script.py
 ~~~~
 
-4. Execute webiopi
+Execute webiopi
 ~~~~
 $ sudo systemctl start webiopi
 ~~~~
 
-5. Access Robot and Enjoy!
+Access Robot and Enjoy!
 Access below address on your browser.
 
 ~~~~
