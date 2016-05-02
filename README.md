@@ -65,28 +65,31 @@ $ cd m2
 $ sudo mv webiopi.service /etc/systemd/system/
 ```
 
-Edit /etc/webiopi/config
-~~~~
+Edit `etc/webiopi/config`:
+```sh
 $ sudo vi /etc/webiopi/config
+```
 
+Change like below:
+```
 from:
 #myscript = /home/pi/webiopi/examples/scripts/macros/script.py
 
 To:
 myscript = /usr/share/webiopi/htdocs/m2/script.py
-~~~~
+```
 
 Execute webiopi
-~~~~
+```sh
 $ sudo systemctl start webiopi
-~~~~
+```
 
 Access Robot and Enjoy!
-Access below address on your browser.
+Access your robot from below address on your browser.
 
-~~~~
+```
 http://<ipaddress>:8000/m2/
-~~~~
+```
 
 # Website
 Please check for my website in detail(Japanese only)
